@@ -24,6 +24,6 @@ type BsonKeyGenService struct {
 
 func (service *BsonKeyGenService) GenKey() []byte {
 	id := bson.NewObjectId()
-	fmt.Println(id)
-	return []byte(id)
+	fmt.Println(id.Hex())
+	return []byte(id.Hex())
 }

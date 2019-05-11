@@ -5,7 +5,7 @@ import (
 )
 
 type FileModel struct {
-	Id       bson.ObjectId
+	Id       bson.ObjectId `bson:"_id,omitempty"`
 	FileName string
 	FileExt  string
 }

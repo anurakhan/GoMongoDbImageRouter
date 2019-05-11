@@ -2,6 +2,7 @@ package dal
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -32,7 +33,7 @@ func (repo *PhotosRepository) PostPhoto(buf *bytes.Buffer, fileName string, file
 	interactor.StartConn()
 
 	interactor.InsertFileInfo(&models.FileModel{
-		Id:       bson.ObjectId(id),
+		Id:       bson.ObjectIdHex(string(id)),
 		FileName: fileName,
 		FileExt:  fileExt})
 
@@ -43,15 +44,15 @@ func (repo *PhotosRepository) PostPhoto(buf *bytes.Buffer, fileName string, file
 
 func (repo *PhotosRepository) GetPhotoById(id string) *models.FileRetModel {
 	path := initPath(repo)
-
+	fmt.Println(path)
 	interactor := repo.DbInteractor
 
 	interactor.StartConn()
 
-	fileModel := interactor.GetFileById(bson.ObjectId(id))
+	fileModel := interactor.GetFileById(bson.ObjectIdHex(id))
 
 	interactor.CloseConn()
-
+	fmt.Println(path + "/" + id + "." + fileModel.FileExt)
 	file, err := os.Open(path + "/" + id + "." + fileModel.FileExt)
 
 	data, err := ioutil.ReadAll(file)
@@ -70,6 +71,8 @@ func initPath(repo *PhotosRepository) string {
 	path := repo.Server.FilePath
 
 	path = fromFileSystemDir(path)
+
+	fmt.Println(path)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		os.Mkdir(path, os.ModePerm)

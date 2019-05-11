@@ -29,18 +29,8 @@ func (controller *PhotosController) RegisterHandlers() {
 }
 
 func (controller *PhotosController) getPhotosByIDEndpoint(w http.ResponseWriter, req *http.Request) {
-	var query models.FileId
-
-	if req.Body == nil {
-		Error(w, http.StatusNotFound, "Body is empty!")
-	}
-
-	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&query)
-
-	if err != nil {
-		Error(w, http.StatusBadRequest, "couldn't decode JSON!")
-	}
+	vars := mux.Vars(req)
+	query := models.FileId{Id: vars["id"]}
 
 	service := &photosservice.PhotosService{Ring: controller.Ring,
 		KeyGenService: controller.KeyGenService}
@@ -58,6 +48,9 @@ func (controller *PhotosController) postPhotoEndpoint(w http.ResponseWriter, req
 		panic(err)
 	}
 	defer file.Close()
+
+	fmt.Println("YOYOYOYY")
+
 	name := strings.Split(header.Filename, ".")
 	fmt.Printf("File name %s\n", name[0])
 	// Copy the file data to my buffer
