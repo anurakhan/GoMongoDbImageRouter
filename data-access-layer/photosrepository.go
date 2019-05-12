@@ -11,6 +11,7 @@ import (
 	"github.com/anurakhan/go-mongo-lb-driver/models"
 	"github.com/anurakhan/go-mongo-lb-driver/server"
 	"gopkg.in/mgo.v2/bson"
+	"encoding/hex"
 )
 
 type PhotosRepository struct {
@@ -33,13 +34,13 @@ func (repo *PhotosRepository) PostPhoto(buf *bytes.Buffer, fileName string, file
 	interactor.StartConn()
 
 	interactor.InsertFileInfo(&models.FileModel{
-		Id:       bson.ObjectIdHex(string(id)),
+		Id:       bson.ObjectId(string(id)),
 		FileName: fileName,
 		FileExt:  fileExt})
 
 	interactor.CloseConn()
 
-	return string(id)
+	return hex.EncodeToString(id)
 }
 
 func (repo *PhotosRepository) GetPhotoById(id string) *models.FileRetModel {
@@ -49,7 +50,7 @@ func (repo *PhotosRepository) GetPhotoById(id string) *models.FileRetModel {
 
 	interactor.StartConn()
 
-	fileModel := interactor.GetFileById(bson.ObjectIdHex(id))
+	fileModel := interactor.GetFileById(bson.ObjectId(id))
 
 	interactor.CloseConn()
 	fmt.Println(path + "/" + id + "." + fileModel.FileExt)

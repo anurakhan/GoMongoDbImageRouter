@@ -1,7 +1,7 @@
 package keygen
 
 import (
-	"fmt"
+	"encoding/hex"
 
 	"github.com/segmentio/ksuid"
 	"gopkg.in/mgo.v2/bson"
@@ -24,6 +24,9 @@ type BsonKeyGenService struct {
 
 func (service *BsonKeyGenService) GenKey() []byte {
 	id := bson.NewObjectId()
-	fmt.Println(id.Hex())
-	return []byte(id.Hex())
+	data, err := hex.DecodeString(id.Hex())
+	if err != nil {
+		panic(err)
+	}
+	return data
 }

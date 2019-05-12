@@ -12,11 +12,15 @@ import (
 )
 
 func main() {
+
 	var hashRing hashring.IConsistentHashRing = new(hashring.ConsistentHashRing)
 	hashRing.InitRing()
-	hashRing.AddServer(&server.Server{Name: "MongoDb1", Address: "localhost:27017", FilePath: "FileSystem1"})
-	hashRing.AddServer(&server.Server{Name: "MongoDb2", Address: "localhost:27018", FilePath: "FileSystem2"})
-	hashRing.AddServer(&server.Server{Name: "MongoDb3", Address: "localhost:27019", FilePath: "FileSystem3"})
+	hashRing.AddServer(&server.Server{Name: "MongoDb1", Address: "localhost:27017",
+		FilePath: "FileSystem1", KeyForCh: []byte("\\؁�Н{�y�")})
+	hashRing.AddServer(&server.Server{Name: "MongoDb2", Address: "localhost:27018",
+		FilePath: "FileSystem2", KeyForCh: []byte("\\؂%Н{$a�y")})
+	hashRing.AddServer(&server.Server{Name: "MongoDb3", Address: "localhost:27019",
+		FilePath: "FileSystem3", KeyForCh: []byte("\\؂PН{��ga")})
 
 	router := mux.NewRouter()
 	photosController := &photoscontroller.PhotosController{Router: router,

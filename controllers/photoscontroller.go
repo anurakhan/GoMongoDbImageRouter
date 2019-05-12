@@ -35,7 +35,7 @@ func (controller *PhotosController) getPhotosByIDEndpoint(w http.ResponseWriter,
 	service := &photosservice.PhotosService{Ring: controller.Ring,
 		KeyGenService: controller.KeyGenService}
 
-	fileRetModel := service.GetPhoto(query.Id)
+	fileRetModel := service.GetPhoto(query.ToHex())
 
 	RetImage(w, fileRetModel, http.StatusOK)
 }
